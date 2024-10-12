@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.GeneralFragment">
+
+    <!--<TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="rg_fs_game" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_cmdline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/commandline" />
+
+            <Switch
+                android:id="@+id/readonly_command"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="false"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edt_cmdline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:imeOptions="flagNoExtractUi"
+            android:textSize="16sp"
+            android:inputType="textNoSuggestions|textMultiLine"/>
+
+        <LinearLayout
+            android:id="@+id/temp_cmdline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/edt_cmdline_temp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:textSize="16sp"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textNoSuggestions|textMultiLine" />
+
+            <Switch
+                android:id="@+id/editable_temp_command"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="false"/>
+        </LinearLayout>
+        <!--<TextView
+            android:id="@+id/edt_cmdline_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FF000000"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_path"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/game_working_directory" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom">
+
+            <EditText
+                android:id="@+id/edt_path"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textNoSuggestions">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/launcher_tab1_game_data_chooser_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chooser"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/grey"
+                android:textAllCaps="false"
+                android:layout_margin="5dp"
+                app:cornerRadius="0dp">
+
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:id="@+id/launcher_fs_basepath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/game_cvar_fs_basepath" />
+                <TextView
+                    android:id="@+id/launcher_fs_game_cvar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="" />
+                <TextView
+                    android:id="@+id/launcher_fs_game_subdir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/collapse_mods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="false"/>
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/mods_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/mods_container_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioGroup
+                    android:id="@+id/rg_fs_game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/rg_fs_etwgame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></RadioGroup>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/mod_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom">
+
+                <CheckBox
+                    android:id="@+id/fs_game_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_mod" />
+
+                <LinearLayout
+                    android:id="@+id/launcher_tab1_user_game_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom">
+
+                    <EditText
+                        android:id="@+id/edt_fs_game"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/input_your_mod_folder_name"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="textNoSuggestions"/>
+
+                    <Button
+                        android:id="@+id/launcher_tab1_game_mod_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chooser"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/grey"
+                        android:textAllCaps="false"
+                        android:layout_margin="5dp"
+                        app:cornerRadius="0dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/extras_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/launcher_tab1_command_record"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/command_record"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/grey"
+                    android:textAllCaps="false"
+                    android:layout_margin="5dp"
+                    app:cornerRadius="0dp"/>
+
+                <Button
+                    android:id="@+id/launcher_tab1_edit_cvar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/edit_cvar"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/grey"
+                    android:textAllCaps="false"
+                    android:layout_margin="5dp"
+                    app:cornerRadius="0dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/launcher_tab1_edit_autoexec"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/edit_autoexec_cfg"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/grey"
+                    android:textAllCaps="false"
+                    android:layout_margin="5dp"
+                    app:cornerRadius="0dp"/>
+
+                <Button
+                    android:id="@+id/launcher_tab1_edit_doomconfig"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/edit_etconfig_cfg"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/grey"
+                    android:textAllCaps="false"
+                    android:layout_margin="5dp"
+                    app:cornerRadius="0dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

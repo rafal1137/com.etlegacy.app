@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/launcher_settings">
+
+    <PreferenceCategory
+        android:key="launcher"
+        android:title="@string/launcher"
+        >
+        <CheckBoxPreference
+            android:title="@string/launcher_orientation"
+            android:key="harm_launcher_orientation"
+            android:persistent="true"
+            android:defaultValue="false"
+            android:summary="@string/launcher_orientation_follow_system"
+            />
+        <!--<CheckBoxPreference
+            android:title="Reopen launcher"
+            android:key="harm_reopen_launcher"
+            android:persistent="true"
+            android:defaultValue="false"
+            android:summary="Open launcher when game finished"
+            />-->
+        <CheckBoxPreference
+            android:title="@string/hide_ad_bar"
+            android:key="harm_hide_ad_bar"
+            android:persistent="true"
+            android:defaultValue="true"
+            android:summary="@string/hide_ad_bar_in_launcher"
+            />
+        <CheckBoxPreference
+            android:title="@string/auto_save_button_settings"
+            android:key="harm_autosave_button_settings"
+            android:persistent="true"
+            android:defaultValue="true"
+            android:summary="@string/auto_save_buttons_settings_immediately_if_changed"
+            />
+        <ListPreference
+            android:title="@string/language"
+            android:key="harm_lang"
+            android:persistent="true"
+            android:defaultValue="system"
+            android:summary="@string/setup_launcher_language"
+            android:entryValues="@array/lang_values"
+            android:entries="@array/lang_labels"
+            />
+        <ListPreference
+            android:title="@string/theme"
+            android:key="harm_theme"
+            android:persistent="true"
+            android:defaultValue="system"
+            android:summary="@string/setup_launcher_theme"
+            android:entryValues="@array/theme_values"
+            android:entries="@array/theme_labels"
+            />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
