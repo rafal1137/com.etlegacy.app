@@ -9,7 +9,8 @@ import androidx.preference.PreferenceManager;
 
 import com.etlegacy.app.q3e.Q3EPreference;
 
-public final class Theme {
+public final class Theme
+{
     private static final int THEME_UNINITIALIZED = -2; // uninitialized
     private static final int THEME_UNSET         = -1; // unset
     private static final int THEME_DEFAULT       = 0; // system
@@ -77,8 +78,10 @@ public final class Theme {
         return Theme == THEME_CLASSIC ? Color.WHITE : Color.BLACK;
     }
 
-    private Theme() {
-
+    public static int WhiteColor(Context context)
+    {
+        Init(context);
+        return Theme == THEME_CLASSIC ? Color.BLACK : Color.WHITE;
     }
 
     public static void Reset(Context context)
@@ -86,5 +89,9 @@ public final class Theme {
         Theme = THEME_UNINITIALIZED;
         if(null != context)
             Init(context);
+    }
+
+    private Theme() {
+
     }
 }

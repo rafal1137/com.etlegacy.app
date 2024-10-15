@@ -1,10 +1,7 @@
 package com.etlegacy.app.q3e.karin;
 
-public class KidTech4Command extends KidTechCommand {
-    public KidTech4Command(String str) {
-        super(ARG_PREFIX_IDTECH, str);
-    }
-
+public final class KidTech4Command extends KidTechCommand
+{
     public static String SetProp(String str, String name, Object val)
     {
         return KidTechCommand.SetProp(ARG_PREFIX_IDTECH, str, name, val);
@@ -63,5 +60,10 @@ public class KidTech4Command extends KidTechCommand {
     public static boolean HasParam(String str, String name)
     {
         return KidTechCommand.HasParam(ARG_PREFIX_IDTECH, str, name);
+    }
+
+    public KidTech4Command(String str)
+    {
+        super(ARG_PREFIX_IDTECH, str);
     }
 }

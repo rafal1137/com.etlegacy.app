@@ -2,7 +2,6 @@ package com.etlegacy.app;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.Manifest;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ETLMain extends Activity {
+public class ETLMain extends AppCompatActivity {
 
 	private static final String PACK_TAG = "PK3";
 	private String[] PERMISSIONS;

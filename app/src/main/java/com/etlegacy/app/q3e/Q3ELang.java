@@ -42,4 +42,3 @@ public final class Q3ELang {
         resources.updateConfiguration(configuration, metrics);
     }
 }
-

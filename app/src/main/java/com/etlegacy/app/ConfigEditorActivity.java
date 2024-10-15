@@ -1,19 +1,15 @@
 package com.etlegacy.app;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -114,104 +110,6 @@ public class ConfigEditorActivity extends AppCompatActivity {
             Reset();
             return false;
         }
-    }
-
-    private boolean SaveFile()
-    {
-        if (m_file == null)
-            return false;
-        return Q3EUtils.file_put_contents(m_file, V.editText.getText().toString());
-    }
-
-    private boolean IsValid()
-    {
-        return m_file != null;
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        if(IsValid() && m_edited)
-        {
-            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    switch(which)
-                    {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            SaveFile();
-                            dialog.dismiss();
-                            finish();
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            dialog.dismiss();
-                            finish();
-                            break;
-                        case DialogInterface.BUTTON_NEUTRAL:
-                        default:
-                            dialog.dismiss();
-                            break;
-                    }
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.warning);
-            builder.setMessage(R.string.the_text_is_modified_since_open_save_changes_to_file);
-            builder.setPositiveButton(R.string.yes, listener);
-            builder.setNegativeButton(R.string.no, listener);
-            builder.setNeutralButton(R.string.cancel, listener);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-        else
-            super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.config_editor_menu, menu);
-        V.SetupMenu(menu);
-        V.saveBtn.setEnabled(false);
-        V.reloadBtn.setEnabled(false);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int itemId = item.getItemId();
-        if (itemId == R.id.config_editor_menu_save)
-        {
-            if (IsValid())
-            {
-                if (SaveFile())
-                {
-                    m_edited = false;
-                    V.titleText.setText(m_filePath);
-                    V.titleText.setTextColor(Theme.BlackColor(this));
-                    if (V.saveBtn != null)
-                        V.saveBtn.setEnabled(false);
-                    if (V.reloadBtn != null)
-                        V.reloadBtn.setEnabled(false);
-                    Toast.makeText(ConfigEditorActivity.this, R.string.save_file_successful, Toast.LENGTH_LONG).show();
-                }
-                else
-                    Toast.makeText(ConfigEditorActivity.this, R.string.save_file_failed, Toast.LENGTH_LONG).show();
-
-            }
-            else
-                Toast.makeText(ConfigEditorActivity.this, R.string.no_file, Toast.LENGTH_LONG).show();
-        }
-        else if (itemId == R.id.config_editor_menu_reload)
-        {
-            if (IsValid())
-                LoadFile(m_filePath);
-            else
-                Toast.makeText(ConfigEditorActivity.this, R.string.no_file, Toast.LENGTH_LONG).show();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private class ViewHolder

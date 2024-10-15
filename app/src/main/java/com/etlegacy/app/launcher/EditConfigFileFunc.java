@@ -6,9 +6,8 @@ import android.os.Bundle;
 import com.etlegacy.app.ConfigEditorActivity;
 import com.etlegacy.app.GameLauncher;
 import com.etlegacy.app.R;
-import com.etlegacy.app.q3e.Q3ELang;
 import com.etlegacy.app.lib.ContextUtility;
-import com.etlegacy.app.q3e.Q3EUtils;
+import com.etlegacy.app.q3e.Q3ELang;
 import com.etlegacy.app.q3e.karin.KStr;
 
 import java.io.File;
@@ -49,17 +48,6 @@ public final class EditConfigFileFunc extends GameLauncherFunc {
     public void run()
     {
         String basePath = m_path;
-        if(!Q3EUtils.q3ei.IsStandaloneGame())
-        {
-            String innerDir = Q3EUtils.q3ei.GetGameModSubDirectory();
-            if(KStr.NotEmpty(innerDir))
-            {
-                if(!m_game.startsWith(innerDir))
-                    basePath = KStr.AppendPath(basePath, innerDir);
-            }
-            if(!Q3EUtils.q3ei.isETW)
-                basePath = KStr.AppendPath(basePath, m_game);
-        }
         basePath = KStr.AppendPath(basePath, m_file);
         File f = new File(basePath);
         if(!f.isFile() || !f.canWrite() || !f.canRead())
