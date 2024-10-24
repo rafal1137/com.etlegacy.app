@@ -1,6 +1,7 @@
 package com.etlegacy.app.q3e.karin;
 
 import java.io.File;
+import java.util.Collection;
 
 public final class KStr {
     private KStr() {
@@ -70,5 +71,40 @@ public final class KStr {
             }
         }
         return sb.toString();
+    }
+
+    public static boolean NotEmpty(String str)
+    {
+        return null != str && !str.isEmpty();
+    }
+
+    public static boolean IsEmpty(String str)
+    {
+        return null == str || str.isEmpty();
+    }
+
+    public static String Join(Object[] args, String sep)
+    {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < args.length; i++)
+        {
+            Object o = args[i];
+            if(null == o)
+                continue;
+            sb.append(o);
+            if(i < args.length - 1)
+                sb.append(null != sep ? sep : "");
+        }
+        return sb.toString();
+    }
+
+    public static String Join(Collection<?> args, String sep)
+    {
+        return Join(args.toArray(), sep);
+    }
+
+    public static String Join(String sep, String...args)
+    {
+        return Join(args, sep);
     }
 }

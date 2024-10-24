@@ -4,6 +4,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="55dp"
+        android:background="@color/theme_etl_main_color"
+        android:id="@+id/toolbar">
+
+    </androidx.appcompat.widget.Toolbar>
+
     <ListView
         android:id="@+id/onscreen_button_config_page_list"
         android:layout_width="match_parent"

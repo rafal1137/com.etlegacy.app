@@ -5,7 +5,8 @@ import com.etlegacy.app.q3e.Q3EGlobals;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KidTechCommand {
+public class KidTechCommand
+{
     public static final String ARG_PREFIX_IDTECH = "+";
     public static final String ARG_PREFIX_QUAKETECH = "-";
 
@@ -30,164 +31,6 @@ public class KidTechCommand {
     public static boolean strtob(String str)
     {
         return "1".equals(str);
-    }
-
-    private String ReadWord(String str, int start)
-    {
-        StringBuilder ret = new StringBuilder();
-        int i = start;
-        while(i < str.length())
-        {
-            char c = str.charAt(i);
-            if(Character.isSpaceChar(c))
-                break;
-            ret.append(c);
-            i++;
-        }
-        return ret.toString();
-    }
-
-    private static String ValueToString(Object o)
-    {
-        if(null == o)
-            return "";
-        return o.toString();
-    }
-
-    private void AddPart(int type, Object value)
-    {
-        CmdPart part = new CmdPart();
-        part.type = type;
-        part.str = ValueToString(value);
-        cmdParts.add(part);
-    }
-
-    private String SkipBlank(String str, int start)
-    {
-        StringBuilder ret = new StringBuilder();
-        int i = start;
-        while(i < str.length())
-        {
-            char c = str.charAt(i);
-            if(!Character.isSpaceChar(c))
-                break;
-            ret.append(c);
-            i++;
-        }
-        return ret.toString();
-    }
-
-    private String ReadUtil(String str, int start, String chars)
-    {
-        StringBuilder ret = new StringBuilder();
-        int i = start;
-        while(i < str.length())
-        {
-            char c = str.charAt(i);
-            if(Character.isSpaceChar(c))
-            {
-                if(i + 1 < str.length())
-                {
-                    char c2 = str.charAt(i + 1);
-                    if(chars.contains("" + c2))
-                        break;
-                }
-                else
-                    break;
-            }
-            ret.append(c);
-            i++;
-        }
-        return ret.toString();
-    }
-
-    private boolean IsEnd(int i)
-    {
-        return i >= cmdParts.size();
-    }
-
-    private int FindNext(int start, int type)
-    {
-        int i = start;
-        for(; i < cmdParts.size(); i++)
-        {
-            if(cmdParts.get(i).type == type)
-                break;
-        }
-        return i;
-    }
-
-    private void InsertBlankPart(int pos)
-    {
-        InsertPart(pos, CMD_PART_BLANK, " ");
-    }
-
-    private boolean RequireNextType(int start, int type)
-    {
-        return RequireType(start + 1, type);
-    }
-
-    private boolean RequireType(int i, int type)
-    {
-        if(IsEnd(i))
-            return false;
-        return cmdParts.get(i).type == type;
-    }
-
-    private void InsertPart(int i, int type, Object value)
-    {
-        CmdPart part = new CmdPart();
-        part.type = type;
-        part.str = ValueToString(value);
-        cmdParts.add(i, part);
-    }
-
-    private CmdPart GetPart(int index)
-    {
-        if(index < 0 || index >= cmdParts.size())
-            return null;
-        return cmdParts.get(index);
-    }
-
-    private boolean EndsWithBlank()
-    {
-        return(!cmdParts.isEmpty() && cmdParts.get(cmdParts.size() - 1).type == CMD_PART_BLANK);
-    }
-
-    private void AddBlankPart()
-    {
-        AddPart(CMD_PART_BLANK, " ");
-    }
-
-    private char GetArgPrefixChar()
-    {
-        return argPrefix.charAt(0);
-    }
-
-    private void RemoveParts(int start, int end)
-    {
-        int i = 0;
-        int num = end - start;
-        while(i < num)
-        {
-            cmdParts.remove(start);
-            i++;
-        }
-    }
-
-    private boolean EqualsParam(String part, String name)
-    {
-        return name.equals(part.substring(1));
-    }
-
-    private int FirstBlank()
-    {
-        int start = 0;
-        start = FindNext(start, CMD_PART_EXECUTION);
-        if(IsEnd(start))
-            return 0;
-        else
-            return start + 1;
     }
 
     public static String SetProp(String PLUS, String str, String name, Object val)
@@ -628,7 +471,7 @@ public class KidTechCommand {
         return defVal;
     }
 
-    private static final int CMD_PART_EXECUTION = 0; // game.arm
+    private static final int CMD_PART_EXECUTION = 0; // libetl.so
     private static final int CMD_PART_BLANK = 1; // space
     private static final int CMD_PART_PARAM = 2; // +param/-param
     private static final int CMD_PART_SET   = 3; // +set
@@ -645,10 +488,10 @@ public class KidTechCommand {
             String tname;
             switch(type)
             {
-                case CMD_PART_EXECUTION: tname = "command"; break;
+                case CMD_PART_EXECUTION: tname = "lib"; break;
                 case CMD_PART_BLANK: tname = "space"; break;
-                case CMD_PART_PARAM: tname = "Parameter"; break;
-                case CMD_PART_SET: tname = "Set"; break;
+                case CMD_PART_PARAM: tname = "param"; break;
+                case CMD_PART_SET: tname = "set"; break;
                 case CMD_PART_NAME: tname = "name"; break;
                 default: tname = "value"; break;
             }
@@ -711,5 +554,174 @@ public class KidTechCommand {
                 hasArg0 = true;
             }
         }
+    }
+
+    private boolean EndsWithBlank()
+    {
+        return(!cmdParts.isEmpty() && cmdParts.get(cmdParts.size() - 1).type == CMD_PART_BLANK);
+    }
+
+    private void AddPart(int type, Object value)
+    {
+        CmdPart part = new CmdPart();
+        part.type = type;
+        part.str = ValueToString(value);
+        cmdParts.add(part);
+    }
+
+    private void InsertPart(int i, int type, Object value)
+    {
+        CmdPart part = new CmdPart();
+        part.type = type;
+        part.str = ValueToString(value);
+        cmdParts.add(i, part);
+    }
+
+    private String SkipBlank(String str, int start)
+    {
+        StringBuilder ret = new StringBuilder();
+        int i = start;
+        while(i < str.length())
+        {
+            char c = str.charAt(i);
+            if(!Character.isSpaceChar(c))
+                break;
+            ret.append(c);
+            i++;
+        }
+        return ret.toString();
+    }
+
+    private String ReadWord(String str, int start)
+    {
+        StringBuilder ret = new StringBuilder();
+        int i = start;
+        while(i < str.length())
+        {
+            char c = str.charAt(i);
+            if(Character.isSpaceChar(c))
+                break;
+            ret.append(c);
+            i++;
+        }
+        return ret.toString();
+    }
+
+    private String ReadUtil(String str, int start, String chars)
+    {
+        StringBuilder ret = new StringBuilder();
+        int i = start;
+        while(i < str.length())
+        {
+            char c = str.charAt(i);
+            if(Character.isSpaceChar(c))
+            {
+                if(i + 1 < str.length())
+                {
+                    char c2 = str.charAt(i + 1);
+                    if(chars.contains("" + c2))
+                        break;
+                }
+                else
+                    break;
+            }
+            ret.append(c);
+            i++;
+        }
+        return ret.toString();
+    }
+
+    private int FindNext(int start, int type)
+    {
+        int i = start;
+        for(; i < cmdParts.size(); i++)
+        {
+            if(cmdParts.get(i).type == type)
+                break;
+        }
+        return i;
+    }
+
+    private boolean RequireNextType(int start, int type)
+    {
+        return RequireType(start + 1, type);
+    }
+
+    private boolean RequireType(int i, int type)
+    {
+        if(IsEnd(i))
+            return false;
+        return cmdParts.get(i).type == type;
+    }
+
+    private char GetArgPrefixChar()
+    {
+        return argPrefix.charAt(0);
+    }
+
+    private void AddBlankPart()
+    {
+        AddPart(CMD_PART_BLANK, " ");
+    }
+
+    private void InsertBlankPart(int pos)
+    {
+        InsertPart(pos, CMD_PART_BLANK, " ");
+    }
+
+    private void RemoveParts(int start, int end)
+    {
+        int i = 0;
+        int num = end - start;
+        while(i < num)
+        {
+            cmdParts.remove(start);
+            i++;
+        }
+    }
+
+    private boolean EqualsParam(String part, String name)
+    {
+        return name.equals(part.substring(1));
+    }
+
+    private int FirstBlank()
+    {
+        int start = 0;
+        start = FindNext(start, CMD_PART_EXECUTION);
+        if(IsEnd(start))
+            return 0;
+        else
+            return start + 1;
+    }
+
+    private static String ValueToString(Object o)
+    {
+        if(null == o)
+            return "";
+        return o.toString();
+    }
+
+    private CmdPart GetPart(int index)
+    {
+        if(index < 0 || index >= cmdParts.size())
+            return null;
+        return cmdParts.get(index);
+    }
+
+    private boolean IsEnd(int i)
+    {
+        return i >= cmdParts.size();
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(CmdPart cmdPart : cmdParts)
+        {
+            sb.append(cmdPart.str);
+        }
+        return sb.toString();
     }
 }

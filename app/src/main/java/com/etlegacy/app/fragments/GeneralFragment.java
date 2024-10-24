@@ -1,12 +1,11 @@
 package com.etlegacy.app.fragments;
 
-import static com.etlegacy.app.GameLauncher.default_gamedata;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,12 +15,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.etlegacy.app.GameLauncher;
 import com.etlegacy.app.R;
+import com.etlegacy.app.launcher.CVarEditorFunc;
+import com.etlegacy.app.launcher.ChooseCommandRecordFunc;
+import com.etlegacy.app.launcher.ChooseGameFolderFunc;
 import com.etlegacy.app.launcher.EditConfigFileFunc;
 import com.etlegacy.app.lib.ContextUtility;
 import com.etlegacy.app.q3e.Q3EGlobals;
+import com.etlegacy.app.q3e.Q3ELang;
 import com.etlegacy.app.q3e.Q3EPreference;
 import com.etlegacy.app.q3e.Q3EUtils;
 import com.etlegacy.app.q3e.karin.KStr;
@@ -31,7 +35,21 @@ import com.etlegacy.app.q3e.karin.KStr;
  * create an instance of this fragment.
  */
 public class GeneralFragment extends Fragment {
-    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_EDIT_CONFIG_FILE = 2;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_START               = 1;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_EDIT_CONFIG_FILE    = 2;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_CHOOSE_FOLDER       = 3;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTRACT_PATCH_RESOURCE                   = 4;
+    private static final int CONST_RESULT_CODE_REQUEST_BACKUP_PREFERENCES_CHOOSE_FILE           = 5;
+    private static final int CONST_RESULT_CODE_REQUEST_RESTORE_PREFERENCES_CHOOSE_FILE          = 6;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_CHOOSE_GAME_LIBRARY = 7;
+    private static final int CONST_RESULT_CODE_REQUEST_ADD_EXTERNAL_GAME_LIBRARY                = 8;
+    private static final int CONST_RESULT_CODE_REQUEST_EDIT_EXTERNAL_GAME_LIBRARY               = 9;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTRACT_SOURCE                           = 10;
+    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_CHOOSE_GAME_MOD     = 11;
+    private static final int CONST_RESULT_CODE_ACCESS_ANDROID_DATA                              = 12;
+    private static final int CONST_RESULT_CODE_REQUEST_CREATE_SHORTCUT                          = 13;
+
+    public static final String default_gamedata = Environment.getExternalStorageDirectory() + "/etlegacy";
 
     public View view;
     public EditText edt_cmdline;
@@ -46,6 +64,8 @@ public class GeneralFragment extends Fragment {
 
     private String m_edtPathFocused = "";
     private EditConfigFileFunc m_editConfigFileFunc;
+    private ChooseGameFolderFunc m_chooseGameFolderFunc;
+    private ChooseCommandRecordFunc m_chooseCommandRecordFunc;
 
 
     @Override
@@ -94,15 +114,15 @@ public class GeneralFragment extends Fragment {
                 }
                 else if (id == R.id.launcher_tab1_game_data_chooser_button)
                 {
-                    //OpenFolderChooser();
+                    OpenFolderChooser();
                 }
                 else if (id == R.id.launcher_tab1_edit_cvar)
                 {
-                    //EditCVar();
+                    EditCVar();
                 }
                 else if (id == R.id.launcher_tab1_command_record)
                 {
-                    //OpenCommandChooser();
+                    OpenCommandChooser();
                 }
             }
         };
@@ -208,8 +228,17 @@ public class GeneralFragment extends Fragment {
 
     private void UpdateUserGame(boolean on)
     {
-        fs_game_user.setText(R.string.user_mod);
-        edt_fs_game.setEnabled(on);
+        if (on)
+        {
+            fs_game_user.setText(R.string.user_mod);
+            edt_fs_game.setEnabled(on);
+        }
+        else
+        {
+            RemoveGameModFromCommand();
+            edt_fs_game.setText("");
+            edt_fs_game.setEnabled(false);
+        }
     }
 
     public void updatehacktings(boolean all)
@@ -247,4 +276,85 @@ public class GeneralFragment extends Fragment {
         // return KidTech4Command.GetProp(GetCmdText(), name);
     }
 
+    private void RemoveProp(String name)
+    {
+        String orig = GetCmdText();
+        String str = Q3EUtils.q3ei.GetGameCommandEngine(orig).RemoveProp(name).toString();
+        if (!orig.equals(str))
+        {
+            SetCmdText(str);
+        }
+    }
+
+    private void RemoveGameModFromCommand()
+    {
+        String arg = Q3EUtils.q3ei.GetGameCommandParm();
+        RemoveProp(arg);
+    }
+
+    private void OpenFolderChooser()
+    {
+        if (null == m_chooseGameFolderFunc)
+            m_chooseGameFolderFunc = new ChooseGameFolderFunc((GameLauncher) getContext(), CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_CHOOSE_FOLDER, CONST_RESULT_CODE_ACCESS_ANDROID_DATA, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    edt_path.setText(m_chooseGameFolderFunc.GetResult());
+                    OpenSuggestGameWorkingDirectory(edt_path.getText().toString());
+                }
+            });
+        Bundle bundle = new Bundle();
+        bundle.putString("path", edt_path.getText().toString());
+        m_chooseGameFolderFunc.Start(bundle);
+    }
+
+    public void OpenSuggestGameWorkingDirectory(String curPath)
+    {
+        if(ContextUtility.InScopedStorage() && !ContextUtility.IsInAppPrivateDirectory(getContext(), curPath))
+        {
+            String path = Q3EUtils.GetAppStoragePath(getContext());
+            Toast.makeText(getContext(), Q3ELang.tr(getContext(), R.string.suggest_game_woring_directory_tips, path), Toast.LENGTH_LONG).show();
+        }
+        m_edtPathFocused = curPath;
+    }
+
+    private void EditCVar()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString("game", GetGameModFromCommand());
+        bundle.putString("command", Q3EUtils.q3ei.start_temporary_extra_command);
+        CVarEditorFunc cVarEditorFunc = new CVarEditorFunc((GameLauncher) getContext(), new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Q3EUtils.q3ei.start_temporary_extra_command = CVarEditorFunc.GetResultFromBundle(bundle);
+            }
+        });
+        cVarEditorFunc.Start(bundle);
+    }
+
+    private void OpenCommandChooser()
+    {
+        final String PreferenceKey = Q3EUtils.q3ei.GetGameCommandRecordPreferenceKey();
+        String cmd = GetCmdText();
+        if (null == m_chooseCommandRecordFunc)
+        {
+            m_chooseCommandRecordFunc = new ChooseCommandRecordFunc((GameLauncher) getContext(), new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    String cmdResult = m_chooseCommandRecordFunc.GetResult();
+                    if(null != cmdResult && !cmd.equals(cmdResult))
+                        SetCmdText(cmdResult);
+                }
+            });
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("command", cmd);
+        bundle.putString("key", PreferenceKey);
+        m_chooseCommandRecordFunc.Start(bundle);
+    }
 }

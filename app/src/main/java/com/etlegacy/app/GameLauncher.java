@@ -1,11 +1,18 @@
 package com.etlegacy.app;
 
+import static com.etlegacy.app.fragments.GeneralFragment.default_gamedata;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.etlegacy.app.q3e.Q3EInterface;
+import com.etlegacy.app.q3e.Q3ELang;
+import com.etlegacy.app.q3e.Q3EUtils;
+import com.etlegacy.app.sys.Theme;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;
@@ -15,13 +22,22 @@ public class GameLauncher extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
-    public static final String default_gamedata = Environment.getExternalStorageDirectory() + "/etlegacy";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //EdgeToEdge.enable(this);
+        Q3ELang.Locale(this);
         setContentView(R.layout.activity_main);
+
+        Q3EInterface q3ei = new Q3EInterface();
+
+        q3ei.InitWET();
+        q3ei.default_path = default_gamedata;
+        q3ei.LoadTypeAndArgTablePreference(this);
+
+
+        Q3EUtils.q3ei = q3ei;
 
         tabLayout = findViewById(R.id.tablayout);
         viewPager2 = findViewById(R.id.viewpager);
@@ -52,5 +68,13 @@ public class GameLauncher extends AppCompatActivity {
                 Objects.requireNonNull(tabLayout.getTabAt(position)).select();
             }
         });
+    }
+
+    public String GetDefaultGameDirectory()
+    {
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+            return Environment.getExternalStorageDirectory() + "/Android/data/" + getApplicationContext().getPackageName();
+        else
+            return default_gamedata;
     }
 }

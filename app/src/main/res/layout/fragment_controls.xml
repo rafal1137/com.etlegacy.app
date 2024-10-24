@@ -59,12 +59,14 @@
                 android:id="@+id/smoothjoy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/smooth_joystick"/>
 
             <CheckBox
                 android:id="@+id/launcher_tab2_joystick_unfixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/unfixed_joystick"/>
 
             <LinearLayout
@@ -94,12 +96,14 @@
                 android:id="@+id/secfinglmb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/multitouch_shoot_left_mouse_button_click_on_a_second_touch"/>
 
             <CheckBox
                 android:id="@+id/launcher_tab2_enable_gyro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/enable_gyroscope"/>
 
             <LinearLayout
@@ -167,6 +171,7 @@
                 android:id="@+id/hideonscr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/hide_onscreen_buttons"
                 />
 
@@ -174,6 +179,7 @@
                 android:id="@+id/using_mouse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:buttonTint="@color/grey"
                 android:text="@string/using_mouse"
                 />
 

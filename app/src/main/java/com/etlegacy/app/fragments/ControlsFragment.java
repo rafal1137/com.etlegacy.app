@@ -25,13 +25,13 @@ import com.etlegacy.app.lib.Utility;
 import com.etlegacy.app.q3e.Q3EControlView;
 import com.etlegacy.app.q3e.Q3EGlobals;
 import com.etlegacy.app.q3e.Q3EPreference;
+import com.etlegacy.app.q3e.Q3EUiConfig;
 import com.etlegacy.app.q3e.Q3EUtils;
 
 import org.libsdl.app.SDLActivity;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the "{@link ControlsFragment#newInstance}" factory method to
  * create an instance of this fragment.
  */
 public class ControlsFragment extends Fragment {
@@ -222,5 +222,10 @@ public class ControlsFragment extends Fragment {
     private void OpenOnScreenButtonThemeSetting()
     {
         new SetupControlsThemeFunc((GameLauncher) getContext()).Start(new Bundle());
+    }
+
+    public void controls(View view)
+    {
+        startActivity(new Intent(getContext(), Q3EUiConfig.class));
     }
 }

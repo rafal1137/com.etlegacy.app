@@ -18,6 +18,17 @@ public final class Q3EPreference {
     public static final String fs_game_user                           = "fs_game_user";
     public static final String LANG                          = "harm_lang";
     public static final String THEME                         = "harm_theme";
+    public static final String CONTROLS_THEME                = "harm_controls_theme";
+    public static final String ONSCREEN_BUTTON               = "harm_onscreen_key"; // old = "harm_onscreen_button"
+    public static final String WEAPON_PANEL_KEYS             = "harm_weapon_panel_keys";
+    public static final String pref_harm_etw_command_record   = "q3e_harm_etw_command_record";
+    public static final String pref_harm_etw_fs_game          = "q3e_harm_etw_fs_game";
+    public static final String pref_params_etw                = "q3e_params_etw";
+    public static final String pref_datapath      = "q3e_datapath";
+    public static final String COVER_EDGES                   = "harm_cover_edges";
+    public static final String HIDE_NAVIGATION_BAR           = "harm_hide_nav";
+    public static final String AUTOSAVE_BUTTON_SETTINGS      = "harm_autosave_button_settings";
+
 
     private Q3EPreference() {
 

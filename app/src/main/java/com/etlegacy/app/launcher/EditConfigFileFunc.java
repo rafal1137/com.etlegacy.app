@@ -2,6 +2,7 @@ package com.etlegacy.app.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.etlegacy.app.ConfigEditorActivity;
 import com.etlegacy.app.GameLauncher;
@@ -15,7 +16,6 @@ import java.io.File;
 public final class EditConfigFileFunc extends GameLauncherFunc {
     private final int m_code;
     private String m_path;
-    private String m_game;
     private String m_file;
 
     public EditConfigFileFunc(GameLauncher gameLauncher, int code)
@@ -34,7 +34,6 @@ public final class EditConfigFileFunc extends GameLauncherFunc {
         Reset();
 
         m_path = data.getString("path");
-        m_game = data.getString("game");
         m_file = data.getString("file");
 
         int res = ContextUtility.CheckFilePermission(m_gameLauncher, m_code);

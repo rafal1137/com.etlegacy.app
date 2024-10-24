@@ -113,4 +113,5 @@
     <string name="app_is_rebooting">App is rebooting......</string>
     <string name="do_you_want_to_open_dev_website">Do you want to open Developer\'s Website?</string>
     <string name="startgame">start game</string>
+    <string name="key_config_page_name">OnScreen Button Config</string>
 </resources>
