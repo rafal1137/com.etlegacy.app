@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +124,7 @@ public class ControlsFragment extends Fragment {
                 int id = view.getId();
                 if (id == R.id.configure_onscreen_controls_btn)
                 {
-
+                    controls(view);
                 }
                 else if (id == R.id.onscreen_button_setting)
                 {

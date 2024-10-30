@@ -3,8 +3,18 @@ package com.etlegacy.app.q3e;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Environment;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.DisplayCutout;
+import android.view.View;
+import android.view.WindowInsets;
+import android.view.inputmethod.InputMethodManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.etlegacy.app.q3e.karin.KFDManager;
 
@@ -18,6 +28,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Q3EUtils {
+    public static int UI_FULLSCREEN_HIDE_NAV_OPTIONS = 0;
+    public static int UI_FULLSCREEN_OPTIONS = 0;
+
     public static Q3EInterface q3ei = new Q3EInterface(); //k: new
 
     public static int SupportMouse()
@@ -214,5 +227,171 @@ public class Q3EUtils {
             list.put("controls_theme/" + file, file);
         }
         return list;
+    }
+
+    public static float parseFloat_s(String str, float...def)
+    {
+        float defVal = null != def && def.length > 0 ? def[0] : 0.0f;
+        if(null == str)
+            return defVal;
+        str = str.trim();
+        if(str.isEmpty())
+            return defVal;
+        try
+        {
+            return Float.parseFloat(str);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return defVal;
+        }
+    }
+
+    public static int parseInt_s(String str, int...def)
+    {
+        int defVal = null != def && def.length > 0 ? def[0] : 0;
+        if(null == str)
+            return defVal;
+        str = str.trim();
+        if(str.isEmpty())
+            return defVal;
+        try
+        {
+            return Integer.parseInt(str);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return defVal;
+        }
+    }
+
+    public static String Join(String d, String...strs)
+    {
+        if(null == strs)
+            return null;
+        if(strs.length == 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strs.length; i++) {
+            sb.append(strs[i]);
+            if(i < strs.length - 1)
+                sb.append(d);
+        }
+        return sb.toString();
+    }
+
+    public static int dip2px(Context ctx, int dip)
+    {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, ctx.getResources().getDisplayMetrics());
+    }
+
+    public static int GetEdgeHeight(AppCompatActivity activity, boolean landscape)
+    {
+        int safeInsetTop = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        {
+            WindowInsets rootWindowInsets = activity.getWindow().getDecorView().getRootWindowInsets();
+            if (null != rootWindowInsets)
+            {
+                DisplayCutout displayCutout = rootWindowInsets.getDisplayCutout();
+                if (null != displayCutout)
+                {
+                    safeInsetTop = landscape ? displayCutout.getSafeInsetLeft() : displayCutout.getSafeInsetTop();
+                }
+            }
+        }
+        return safeInsetTop;
+    }
+
+    public static int GetEndEdgeHeight(AppCompatActivity activity, boolean landscape)
+    {
+        int safeInsetBottom = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        {
+            WindowInsets rootWindowInsets = activity.getWindow().getDecorView().getRootWindowInsets();
+            if (null != rootWindowInsets)
+            {
+                DisplayCutout displayCutout = rootWindowInsets.getDisplayCutout();
+                if (null != displayCutout)
+                {
+                    safeInsetBottom = landscape ? displayCutout.getSafeInsetRight() : displayCutout.getSafeInsetBottom();
+                }
+            }
+        }
+        return safeInsetBottom;
+    }
+
+    public static int[] GetFullScreenSize(AppCompatActivity activity)
+    {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getRealSize(size);
+        return new int[]{size.x, size.y};
+    }
+
+    public static int[] GetNormalScreenSize(AppCompatActivity activity)
+    {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return new int[]{size.x, size.y};
+    }
+
+    public static int nextpowerof2(int x)
+    {
+        int candidate = 1;
+        while (candidate < x)
+            candidate *= 2;
+        return candidate;
+    }
+
+    public static Bitmap ResourceToBitmap(Context cnt, String assetname)
+    {
+        String type = PreferenceManager.getDefaultSharedPreferences(cnt).getString(Q3EPreference.CONTROLS_THEME, "");
+        if(null == type)
+            type = "";
+        return LoadControlBitmap(cnt, assetname, type);
+    }
+
+    public static void togglevkbd(View vw)
+    {
+        InputMethodManager imm = (InputMethodManager) vw.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (q3ei.function_key_toolbar)
+        {
+            boolean changed = imm.hideSoftInputFromWindow(vw.getWindowToken(), 0);
+            if (changed) // im from open to close
+                ToggleToolbar(false);
+            else // im is closed
+            {
+                //imm.showSoftInput(vw, InputMethodManager.SHOW_FORCED);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                ToggleToolbar(true);
+            }
+        } else
+        {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    public static void ToggleToolbar(boolean on)
+    {
+        q3ei.callbackObj.ToggleToolbar(on);
+    }
+
+    public static float Rad2Deg(double rad)
+    {
+        double deg = rad / Math.PI * 180.0;
+        return FormatAngle((float) deg);
+    }
+
+    public static float FormatAngle(float deg)
+    {
+        while (deg > 360)
+            deg -= 360;
+        while (deg < 0)
+            deg += 360.0;
+        return deg;
     }
 }

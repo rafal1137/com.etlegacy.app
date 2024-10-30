@@ -61,7 +61,6 @@ public class OnScreenButtonConfigActivity extends AppCompatActivity {
         Q3ELang.Locale(this);
 
         boolean o = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PreferenceKey.LAUNCHER_ORIENTATION, false);
-        ContextUtility.SetScreenOrientation(this, o ? 0 : 1);
 
         m_styleMap = BuildKeyValueMapFromResource(R.array.onscreen_button_style_values, R.array.onscreen_button_style_labels);
         m_sliderStyleMap = BuildKeyValueMapFromResource(R.array.onscreen_slider_style_values, R.array.onscreen_slider_style_labels);

@@ -1,11 +1,8 @@
 package com.etlegacy.app;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Build;
@@ -17,23 +14,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.Manifest;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ETLMain extends AppCompatActivity {
 
 	private static final String PACK_TAG = "PK3";
-	private String[] PERMISSIONS;
+	private String data;
+	private String commands;
+	ProgressDialog progressDialog;
 
 	/**
 	 * Shows ProgressBar
@@ -53,58 +50,6 @@ public class ETLMain extends AppCompatActivity {
 		return asyncDialog;
 	}
 
-	private boolean hasPermissions(Context context, String... PERMISSIONS) {
-
-		if (context != null && PERMISSIONS != null) {
-
-			for (String permission: PERMISSIONS){
-
-				if (ActivityCompat.checkSelfPermission(context,permission) != PackageManager.PERMISSION_GRANTED) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-		if (requestCode == 1) {
-
-			//Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				Log.v("PERMISSION", "WRITE_EXTERNAL_STORAGE Permission is granted");
-			}else {
-				Log.v("PERMISSION", "WRITE_EXTERNAL_STORAGE Permission is denied");
-			}
-
-			//Manifest.permission.READ_EXTERNAL_STORAGE,
-			if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-				Log.v("PERMISSION", "READ_EXTERNAL_STORAGE Permission is granted");
-			}else {
-				Log.v("PERMISSION", "READ_EXTERNAL_STORAGE Permission is denied");
-			}
-
-			//Manifest.permission.BLUETOOTH,
-			if (grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-				Log.v("PERMISSION", "BLUETOOTH Permission is granted");
-			}else {
-				Log.v("PERMISSION", "BLUETOOTH Permission is denied");
-			}
-
-
-			//Manifest.permission.INTERNET
-			if (grantResults[3] == PackageManager.PERMISSION_GRANTED) {
-				Log.v("PERMISSION", "INTERNET Permission is granted");
-			}else {
-				Log.v("PERMISSION", "INTERNET Permission is denied");
-			}
-			Start();
-		}
-	}
 
 	/**
 	 * Convert pixel metrics to dp
@@ -126,8 +71,8 @@ public class ETLMain extends AppCompatActivity {
 		}
 
 		try {
-			etmain = Objects.requireNonNull(getExternalStoragePublicDirectory( Environment.DIRECTORY_DOCUMENTS + "/etlegacy/etmain")).toPath();
-			legacy = Objects.requireNonNull(getExternalStoragePublicDirectory( Environment.DIRECTORY_DOCUMENTS + "/etlegacy/legacy")).toPath();
+			etmain = Paths.get( data + "/etmain");
+			legacy = Paths.get( data + "/legacy");
 		} catch (Exception e) {
 			Log.e("ASSETS", "Could not fetch the external files directory", e);
 		}
@@ -138,6 +83,7 @@ public class ETLMain extends AppCompatActivity {
 
 		if (!Files.exists(etmain) && !Files.exists(legacy)) {
 			try {
+				Log.d(PACK_TAG, "Creating directories");
 				Files.createDirectories(etmain);
 				Files.createDirectories(legacy);
 			} catch (IOException e) {
@@ -162,6 +108,8 @@ public class ETLMain extends AppCompatActivity {
 		// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra("data", data);
+		intent.putExtra("command", commands);
 
 		if (Files.exists(pak0) && Files.exists(pak1) && Files.exists(pak2)) {
 			startActivity(intent);
@@ -169,7 +117,7 @@ public class ETLMain extends AppCompatActivity {
 			return;
 		}
 
-		final ProgressDialog progressDialog = DownloadBar();
+		progressDialog = DownloadBar();
 		final DownloadClient cc = new DownloadClient(this);
 
 		Consumer<DownloadClient.DownloadProgress> progressConsumer = (progress) -> {
@@ -201,18 +149,22 @@ public class ETLMain extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onDestroy() {
+		if (progressDialog != null)
+			progressDialog.dismiss();
+		super.onDestroy();
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-			PERMISSIONS = new String[] {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
-				Manifest.permission.WRITE_EXTERNAL_STORAGE,
-				Manifest.permission.READ_EXTERNAL_STORAGE,
-				Manifest.permission.BLUETOOTH,
-				Manifest.permission.INTERNET
-			};
-		}
+		Bundle bundle = getIntent().getExtras();
+
+		data = bundle.getString("data");
+		commands = bundle.getString("command");
 
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 							 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -235,12 +187,7 @@ public class ETLMain extends AppCompatActivity {
 		etlLayout.addView(imageView, etlParams);
 		setContentView(etlLayout);
 
-		if (!hasPermissions(ETLMain.this,PERMISSIONS)) {
-			ActivityCompat.requestPermissions(ETLMain.this,PERMISSIONS,1);
-		}else {
-			Start();
-		}
-
+		Start();
 	}
 
 	private void extractIncludedPackages(Path etmain) throws IOException {

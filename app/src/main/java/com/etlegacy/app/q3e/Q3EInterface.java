@@ -32,16 +32,23 @@ public class Q3EInterface {
     public int[] arg_table;
     public String[] defaults_table;
     public String[] texture_table;
-    public String start_temporary_extra_command = "";
     public String libname;
     public String datadir;
     public boolean standalone = false;
+    public boolean joystick_smooth = true;
 
+    public boolean view_motion_control_gyro = false;
+    public String start_temporary_extra_command = "";
+    public String cmd = Q3EGlobals.GAME_EXECUABLE;
+    public boolean multithread = false;
+    public boolean function_key_toolbar = false;
     public float joystick_release_range = 0.0f;
     public float joystick_inner_dead_zone = 0.0f;
-    public String app_storage_path = "/sdcard/etlegacy";
 
+    public String app_storage_path = "/sdcard/etlegacy";
     public String default_path = Environment.getExternalStorageDirectory() + "/etlegacy";
+
+    public Q3ECallbackObj callbackObj;
 
 
     private static void InitDefaultTypeTable()
@@ -196,6 +203,12 @@ public class Q3EInterface {
         arg_table[Q3EGlobals.UI_9 * 4 + 3] = 0;
 
         _defaultArgs = Arrays.copyOf(arg_table, arg_table.length);
+    }
+
+    public void InitDefaultsTable()
+    {
+        defaults_table = new String[Q3EGlobals.UI_SIZE];
+        Arrays.fill(defaults_table, "0 0 1 30");
     }
 
     public String GetGameModPreferenceKey()
@@ -366,6 +379,7 @@ public class Q3EInterface {
     public void InitWET()
     {
         InitTable();
+        InitDefaultsTable();
         SetupGame(null);
     }
 
@@ -382,5 +396,11 @@ public class Q3EInterface {
     public void SetAppStoragePath(Context context)
     {
         Q3EUtils.q3ei.app_storage_path = Q3EUtils.GetAppStoragePath(context, null);
+    }
+
+    public static void DumpDefaultOnScreenConfig(int[] args, int[] type)
+    {
+        _defaultArgs = Arrays.copyOf(args, args.length);
+        _defaultType = Arrays.copyOf(type, args.length);
     }
 }

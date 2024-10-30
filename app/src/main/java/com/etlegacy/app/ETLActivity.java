@@ -2,6 +2,7 @@ package com.etlegacy.app;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,9 @@ import com.etlegacy.app.web.ETLDownload;
 import org.libsdl.app.*;
 
 public class ETLActivity extends SDLActivity {
+
+	private String data;
+	private String commands;
 
 	/**
 	 * Hide System UI
@@ -43,6 +47,13 @@ public class ETLActivity extends SDLActivity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 			getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 		}
+
+		Bundle bundle = getIntent().getExtras();
+
+		data = bundle.getString("data");
+		commands = bundle.getString("command");
+		Log.d("ETLActivity", "data: " + data);
+		Log.d("ETLActivity", "commands: " + commands);
 	}
 
 	@Override
@@ -78,6 +89,14 @@ public class ETLActivity extends SDLActivity {
 			return true;
 		}
 		return super.onGenericMotionEvent(event);
+	}
+
+	@Override
+	protected String[] getArguments() {
+		return new String[]{
+				"+set fs_basepath" + data,
+				commands
+		};
 	}
 
 	@Override

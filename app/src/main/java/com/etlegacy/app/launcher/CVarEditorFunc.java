@@ -12,7 +12,6 @@ import com.etlegacy.app.ui.cvar.CVarSettingWidget;
 public final class CVarEditorFunc extends GameLauncherFunc
 {
     private String m_game;
-    private String m_baseCommand;
     private String m_command;
 
     public CVarEditorFunc(GameLauncher gameLauncher, Runnable callback)
@@ -31,7 +30,6 @@ public final class CVarEditorFunc extends GameLauncherFunc
 
         m_game = data.getString("game");
         m_command = data.getString("command");
-        m_baseCommand = data.getString("baseCommand");
 
         run();
     }
@@ -54,7 +52,7 @@ public final class CVarEditorFunc extends GameLauncherFunc
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        SetCmdText(m_baseCommand);
+                        SetCmdText("");
                     }
                 })
                 .setNeutralButton(R.string.reset, new DialogInterface.OnClickListener()

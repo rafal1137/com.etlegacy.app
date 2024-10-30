@@ -28,6 +28,39 @@ public class Q3EKeyCodes {
         }
     }
 
+    public static int GetRealKeyCode(int keycodeGeneric)
+    {
+        Field[] fields = KeyCodesGeneric.class.getFields();
+        for (Field field : fields)
+        {
+            try
+            {
+                int key = (Integer) field.get(null);
+                if(key == keycodeGeneric)
+                {
+                    String name = field.getName();
+                    Field f = KeyCodes.class.getField(name);
+                    return (Integer) f.get(null);
+                }
+            } catch (Exception ignored) {}
+        }
+        return keycodeGeneric;
+    }
+
+    public static int[] GetRealKeyCodes(int[] keycodeGeneric)
+    {
+        int[] codes = new int[keycodeGeneric.length];
+        for (int i = 0; i < keycodeGeneric.length; i++)
+            codes[i] = GetRealKeyCode(keycodeGeneric[i]);
+        return codes;
+    }
+
+    public static void ConvertRealKeyCodes(int[] codes)
+    {
+        for (int i = 0; i < codes.length; i++)
+            codes[i] = GetRealKeyCode(codes[i]);
+    }
+
     public static class KeyCodesQ3
     {
         public static final int K_TAB = 9;
@@ -291,4 +324,6 @@ public class Q3EKeyCodes {
         public static final int J_UP = -K_UPARROW;
         public static final int J_DOWN = -K_DOWNARROW;
     }
+
+    public static final String K_WEAPONS_STR = "1,2,3,4,5,6,7,8,9,q,0";
 }

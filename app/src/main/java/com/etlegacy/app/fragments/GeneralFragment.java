@@ -1,13 +1,16 @@
 package com.etlegacy.app.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import com.etlegacy.app.launcher.CVarEditorFunc;
 import com.etlegacy.app.launcher.ChooseCommandRecordFunc;
 import com.etlegacy.app.launcher.ChooseGameFolderFunc;
 import com.etlegacy.app.launcher.EditConfigFileFunc;
+import com.etlegacy.app.launcher.FragmentToActivity;
 import com.etlegacy.app.lib.ContextUtility;
 import com.etlegacy.app.q3e.Q3EGlobals;
 import com.etlegacy.app.q3e.Q3ELang;
@@ -35,7 +39,6 @@ import com.etlegacy.app.q3e.karin.KStr;
  * create an instance of this fragment.
  */
 public class GeneralFragment extends Fragment {
-    private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_START               = 1;
     private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_EDIT_CONFIG_FILE    = 2;
     private static final int CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_CHOOSE_FOLDER       = 3;
     private static final int CONST_RESULT_CODE_REQUEST_EXTRACT_PATCH_RESOURCE                   = 4;
@@ -66,7 +69,24 @@ public class GeneralFragment extends Fragment {
     private EditConfigFileFunc m_editConfigFileFunc;
     private ChooseGameFolderFunc m_chooseGameFolderFunc;
     private ChooseCommandRecordFunc m_chooseCommandRecordFunc;
+    private FragmentToActivity m_callback;
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            m_callback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        m_callback = null;
+        super.onDetach();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,6 +150,7 @@ public class GeneralFragment extends Fragment {
 
         edt_cmdline.setText(Q3EGlobals.GAME_EXECUABLE);
         edt_path.setText(default_gamedata);
+        m_callback.default_path(default_gamedata);
         m_edtPathFocused = edt_path.getText().toString();
         if(ContextUtility.InScopedStorage())
         {
@@ -141,7 +162,7 @@ public class GeneralFragment extends Fragment {
                         return;
                     if(!hasFocus)
                     {
-                        //OpenSuggestGameWorkingDirectory(curPath);
+                        OpenSuggestGameWorkingDirectory(curPath);
                     }
                 }
             });
@@ -165,6 +186,18 @@ public class GeneralFragment extends Fragment {
             {
             }
         });
+        edt_fs_game.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK) {
+                    edt_fs_game.clearFocus();
+                    return true;
+                }
+                else
+                    return false;
+            }
+        });
+
         launcher_tab1_game_data_chooser_button.setOnClickListener(m_buttonClickListener);
         launcher_tab1_command_record.setOnClickListener(m_buttonClickListener);
         launcher_tab1_edit_cvar.setOnClickListener(m_buttonClickListener);
@@ -183,6 +216,7 @@ public class GeneralFragment extends Fragment {
             return;
         int pos = edit.getSelectionStart();
         edit.setText(text);
+        m_callback.fs_game(text.replace("libetl.so ", ""));
         pos = Math.max(0, Math.min(pos, text.length()));
         try
         {
@@ -301,6 +335,7 @@ public class GeneralFragment extends Fragment {
                 public void run()
                 {
                     edt_path.setText(m_chooseGameFolderFunc.GetResult());
+                    m_callback.new_path(edt_path.getText().toString());
                     OpenSuggestGameWorkingDirectory(edt_path.getText().toString());
                 }
             });
@@ -330,6 +365,7 @@ public class GeneralFragment extends Fragment {
             public void run()
             {
                 Q3EUtils.q3ei.start_temporary_extra_command = CVarEditorFunc.GetResultFromBundle(bundle);
+                m_callback.additional_commands(Q3EUtils.q3ei.start_temporary_extra_command);
             }
         });
         cVarEditorFunc.Start(bundle);

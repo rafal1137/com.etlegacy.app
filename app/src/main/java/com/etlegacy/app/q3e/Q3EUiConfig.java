@@ -1,5 +1,6 @@
 package com.etlegacy.app.q3e;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,8 +31,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.activity.EdgeToEdge;
 
 import com.etlegacy.app.R;
+import com.etlegacy.app.q3e.onscreen.Q3EControls;
 
 public class Q3EUiConfig extends AppCompatActivity {
     private static int m_onScreenButtonGlobalOpacity = Q3EControls.CONST_DEFAULT_ON_SCREEN_BUTTON_OPACITY;
@@ -44,17 +49,11 @@ public class Q3EUiConfig extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+		EdgeToEdge.enable(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && preferences.getBoolean(Q3EPreference.COVER_EDGES, true))
-        {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(lp);
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) // 9
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -95,6 +94,16 @@ public class Q3EUiConfig extends AppCompatActivity {
                 openOptionsMenu();
             }
         });
+    }
+
+    @Override
+    public void openOptionsMenu() {
+        View v = this.getWindow().getDecorView().getRootView();
+        BaseInputConnection mInputConnection = new BaseInputConnection(v, true);
+        KeyEvent kd = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MENU);
+        KeyEvent ku = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU);
+        mInputConnection.sendKeyEvent(kd);
+        mInputConnection.sendKeyEvent(ku);
     }
 
     @Override
@@ -227,6 +236,7 @@ public class Q3EUiConfig extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
     private void OpenOnScreenButtonSizeSetting()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -276,6 +286,7 @@ public class Q3EUiConfig extends AppCompatActivity {
         Toast.makeText(this, R.string.setup_all_on_screen_buttons_opacity_done, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
     private void OpenOnScreenButtonOpacitySetting()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

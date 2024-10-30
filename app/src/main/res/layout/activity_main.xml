@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".GameLauncher">
 
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="55dp"
+        android:minHeight="65dp"
         android:background="@color/theme_etl_main_color"
         android:id="@+id/toolbar"
         app:navigationIcon="@mipmap/ic_launcher"
@@ -21,9 +21,10 @@
     </androidx.appcompat.widget.Toolbar>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/start_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="start"
         android:text="@string/start_game"
         tools:layout_editor_absoluteX="1dp"
         android:textColor="@color/black"
@@ -37,7 +38,7 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button"
+        android:layout_below="@id/start_btn"
         app:tabIndicatorColor="@color/grey"
         app:tabIndicatorFullWidth="true"
         app:tabIndicatorAnimationMode="elastic"
