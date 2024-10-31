@@ -100,7 +100,7 @@ public class GameLauncher extends AppCompatActivity implements FragmentToActivit
             m_startGameFunc = new StartGameFunc(this, CONST_RESULT_CODE_REQUEST_EXTERNAL_STORAGE_FOR_START);
         Bundle bundle = new Bundle();
         bundle.putString("data", getStartupGameData());
-        bundle.putString("command", m_fs_game + " " + (m_command == null ? "" : m_command));
+        bundle.putString("command", (m_fs_game == null ? "" : m_fs_game) + (m_command == null ? "" : m_command));
         m_startGameFunc.Start(bundle);
     }
 

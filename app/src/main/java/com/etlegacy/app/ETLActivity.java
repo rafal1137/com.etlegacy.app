@@ -94,7 +94,7 @@ public class ETLActivity extends SDLActivity {
 	@Override
 	protected String[] getArguments() {
 		return new String[]{
-				"+set fs_basepath" + data,
+				"+set fs_basepath " + data,
 				commands
 		};
 	}

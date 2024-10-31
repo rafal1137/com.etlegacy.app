@@ -13,9 +13,6 @@ public final class Q3EPreference {
     public static final String pref_harm_joystick_unfixed             = "harm_joystick_unfixed";
     public static final String pref_harm_using_mouse                  = "harm_using_mouse";
     public static final String pref_harm_joystick_visible             = "harm_joystick_visible";
-    public static final String pref_harm_view_motion_gyro_x_axis_sens = "q3e_harm_view_motion_gyro_x_axis_sens";
-    public static final String pref_harm_view_motion_gyro_y_axis_sens = "q3e_harm_view_motion_gyro_y_axis_sens";
-    public static final String pref_harm_function_key_toolbar_y       = "harm_function_key_toolbar_y";
     public static final String fs_game_user                           = "fs_game_user";
     public static final String LANG                          = "harm_lang";
     public static final String THEME                         = "harm_theme";
