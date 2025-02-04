@@ -45,6 +45,10 @@ public class Q3EInterface {
     public float joystick_release_range = 0.0f;
     public float joystick_inner_dead_zone = 0.0f;
 
+    //volume key map
+    public int VOLUME_UP_KEY_CODE = Q3EKeyCodes.KeyCodesGeneric.K_F3;
+    public int VOLUME_DOWN_KEY_CODE = Q3EKeyCodes.KeyCodesGeneric.K_F2;
+
     public String app_storage_path = "/sdcard/etlegacy";
     public String default_path = Environment.getExternalStorageDirectory() + "/etlegacy";
 

@@ -6,12 +6,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.inputmethod.InputMethodManager;
+import android.os.Process;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -21,6 +23,7 @@ import com.etlegacy.app.q3e.karin.KFDManager;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +33,10 @@ import java.util.List;
 public class Q3EUtils {
     public static int UI_FULLSCREEN_HIDE_NAV_OPTIONS = 0;
     public static int UI_FULLSCREEN_OPTIONS = 0;
+
+    private static final String TAG = "Q3EUtils";
+
+    private static boolean _dumpPID = false;
 
     public static Q3EInterface q3ei = new Q3EInterface(); //k: new
 
@@ -393,5 +400,64 @@ public class Q3EUtils {
         while (deg < 0)
             deg += 360.0;
         return deg;
+    }
+
+    public static void DumpPID(Context context)
+    {
+        if(_dumpPID)
+            return;
+        try
+        {
+            String text = "" + Process.myPid();
+            final String[] Paths;
+            Paths = new String[]{
+                    PreferenceManager.getDefaultSharedPreferences(context).getString(Q3EPreference.pref_datapath, ""),
+                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N ? context.getDataDir().getAbsolutePath() : context.getCacheDir().getAbsolutePath()
+            };
+            for (String dir : Paths)
+            {
+                if(null == dir || dir.isEmpty())
+                    continue;
+                String path = dir + "/.idtech4amm.pid";
+                file_put_contents(path, text);
+                Log.i(TAG, "DumpPID " + text + " to " + path);
+                _dumpPID = true;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean file_put_contents(String path, String content)
+    {
+        if(null == path)
+            return false;
+        return file_put_contents(new File(path), content);
+    }
+
+    public static boolean file_put_contents(File file, String content)
+    {
+        if(null == file)
+            return false;
+
+        FileWriter writer = null;
+        try
+        {
+            writer = new FileWriter(file);
+            writer.append(content);
+            writer.flush();
+            return true;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        finally
+        {
+            Close(writer);
+        }
     }
 }

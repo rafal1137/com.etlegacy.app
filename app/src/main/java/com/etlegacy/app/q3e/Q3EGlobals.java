@@ -8,6 +8,12 @@ public class Q3EGlobals {
     public static final int ONSCRREN_BUTTON_NOT_HOLD = 0;
     public static final int ONSCRREN_BUTTON_CAN_HOLD = 1;
 
+    // back key function mask
+    public static final int ENUM_BACK_NONE   = 0;
+    public static final int ENUM_BACK_ESCAPE = 1;
+    public static final int ENUM_BACK_EXIT   = 2;
+    public static final int ENUM_BACK_ALL    = 0xFF;
+
     // on-screen button type
     public static final int ONSCREEN_BUTTON_TYPE_FULL         = 0;
     public static final int ONSCREEN_BUTTON_TYPE_RIGHT_BOTTOM = 1;

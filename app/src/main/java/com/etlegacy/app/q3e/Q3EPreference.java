@@ -30,6 +30,9 @@ public final class Q3EPreference {
     public static final String pref_controlprefix = "q3e_controls_";
     public static final String pref_harm_joystick_inner_dead_zone     = "harm_joystick_inner_dead_zone"; //k
     public static final String pref_harm_joystick_release_range       = "harm_joystick_release_range"; //k
+    public static final String pref_harm_view_motion_gyro_x_axis_sens = "q3e_harm_view_motion_gyro_x_axis_sens"; //k
+    public static final String pref_harm_view_motion_gyro_y_axis_sens = "q3e_harm_view_motion_gyro_y_axis_sens"; //k
+    public static final String pref_harm_function_key_toolbar_y       = "harm_function_key_toolbar_y"; //k
 
     public static int GetIntFromString(Context context, String name, int defVal)
     {

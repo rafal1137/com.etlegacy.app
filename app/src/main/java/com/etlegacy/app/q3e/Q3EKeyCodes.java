@@ -1,6 +1,7 @@
 package com.etlegacy.app.q3e;
 
 import android.util.Log;
+import android.view.KeyEvent;
 
 import java.lang.reflect.Field;
 
@@ -59,6 +60,118 @@ public class Q3EKeyCodes {
     {
         for (int i = 0; i < codes.length; i++)
             codes[i] = GetRealKeyCode(codes[i]);
+    }
+
+    public static int convertKeyCode(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_FOCUS:
+                return KeyCodes.K_F1;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                return KeyCodes.K_F2;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                return KeyCodes.K_F3;
+            case KeyEvent.KEYCODE_DPAD_UP:
+                return KeyCodes.K_UPARROW;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                return KeyCodes.K_DOWNARROW;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                return KeyCodes.K_LEFTARROW;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                return KeyCodes.K_RIGHTARROW;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                return KeyCodes.K_CTRL;
+            case KeyEvent.KEYCODE_ENTER:
+                return KeyCodes.K_ENTER;
+            case KeyEvent.KEYCODE_BACK:
+                return KeyCodes.K_ESCAPE;
+            case KeyEvent.KEYCODE_DEL:
+                return KeyCodes.K_BACKSPACE;
+            case KeyEvent.KEYCODE_ALT_LEFT:
+            case KeyEvent.KEYCODE_ALT_RIGHT:
+                return KeyCodes.K_ALT;
+            case KeyEvent.KEYCODE_SHIFT_LEFT:
+            case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                return KeyCodes.K_SHIFT;
+            case KeyEvent.KEYCODE_CTRL_LEFT:
+            case KeyEvent.KEYCODE_CTRL_RIGHT:
+                return KeyCodes.K_CTRL;
+            case KeyEvent.KEYCODE_INSERT:
+                return KeyCodes.K_INS;
+            case 122:
+                return KeyCodes.K_HOME;
+            case KeyEvent.KEYCODE_FORWARD_DEL:
+                return KeyCodes.K_DEL;
+            case 123:
+                return KeyCodes.K_END;
+            case KeyEvent.KEYCODE_ESCAPE:
+                return KeyCodes.K_ESCAPE;
+            case KeyEvent.KEYCODE_TAB:
+                return KeyCodes.K_TAB;
+            case KeyEvent.KEYCODE_F1:
+                return KeyCodes.K_F1;
+            case KeyEvent.KEYCODE_F2:
+                return KeyCodes.K_F2;
+            case KeyEvent.KEYCODE_F3:
+                return KeyCodes.K_F3;
+            case KeyEvent.KEYCODE_F4:
+                return KeyCodes.K_F4;
+            case KeyEvent.KEYCODE_F5:
+                return KeyCodes.K_F5;
+            case KeyEvent.KEYCODE_F6:
+                return KeyCodes.K_F6;
+            case KeyEvent.KEYCODE_F7:
+                return KeyCodes.K_F7;
+            case KeyEvent.KEYCODE_F8:
+                return KeyCodes.K_F8;
+            case KeyEvent.KEYCODE_F9:
+                return KeyCodes.K_F9;
+            case KeyEvent.KEYCODE_F10:
+                return KeyCodes.K_F10;
+            case KeyEvent.KEYCODE_F11:
+                return KeyCodes.K_F11;
+            case KeyEvent.KEYCODE_F12:
+                return KeyCodes.K_F12;
+            case KeyEvent.KEYCODE_CAPS_LOCK:
+                return KeyCodes.K_CAPSLOCK;
+            case KeyEvent.KEYCODE_PAGE_DOWN:
+                return KeyCodes.K_PGDN;
+            case KeyEvent.KEYCODE_PAGE_UP:
+                return KeyCodes.K_PGUP;
+            case KeyEvent.KEYCODE_BUTTON_A:
+                return 'c';
+            case KeyEvent.KEYCODE_BUTTON_B:
+                return 'r';
+            case KeyEvent.KEYCODE_BUTTON_X:
+                return KeyCodes.K_SPACE;//Why not?
+            case KeyEvent.KEYCODE_BUTTON_Y:
+                return 'f';//RTCW use
+            //These buttons are not so popular
+            case KeyEvent.KEYCODE_BUTTON_C:
+                return 'a';//That's why here is a, nobody cares.
+            case KeyEvent.KEYCODE_BUTTON_Z:
+                return 'z';
+            //--------------------------------
+            case KeyEvent.KEYCODE_BUTTON_START:
+                return KeyCodes.K_ESCAPE;
+            case KeyEvent.KEYCODE_BUTTON_SELECT:
+                return KeyCodes.K_ENTER;
+            case KeyEvent.KEYCODE_MENU:
+                break;
+            case KeyEvent.KEYCODE_BUTTON_L2:
+                return KeyCodes.K_MWHEELDOWN;
+            case KeyEvent.KEYCODE_BUTTON_R2:
+                return KeyCodes.K_MWHEELUP;
+            case KeyEvent.KEYCODE_BUTTON_R1:
+                return KeyCodes.K_MOUSE1;//Sometimes it is necessary
+            case KeyEvent.KEYCODE_BUTTON_L1:
+                return 'l';//dunno why
+        }
+        int uchar = event.getUnicodeChar(0);
+        if ((uchar < 127) && (uchar != 0))
+            return uchar;
+        return keyCode % 95 + 32;//Magic
     }
 
     public static class KeyCodesQ3
