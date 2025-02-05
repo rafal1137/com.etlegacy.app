@@ -19,7 +19,6 @@ import com.etlegacy.app.q3e.Q3EControlView;
 import com.etlegacy.app.q3e.Q3ELang;
 import com.etlegacy.app.q3e.Q3EUtils;
 import com.etlegacy.app.q3e.Q3EPreference;
-import com.etlegacy.app.q3e.karin.KDebugTextView;
 import com.etlegacy.app.web.ETLDownload;
 
 import org.libsdl.app.*;
@@ -60,6 +59,13 @@ public class ETLActivity extends SDLActivity {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 			getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+		}
+
+		// Initialize mLayout
+		if (mLayout == null) {
+			mLayout = new RelativeLayout(this);
+			setContentView(mLayout);
+			Log.v("ETLActivity", "mLayout initialized");
 		}
 
 		Bundle bundle = getIntent().getExtras();
